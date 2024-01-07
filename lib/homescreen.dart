@@ -54,11 +54,31 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('Recipes'),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              _logout(context);
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'profile') {
+                // Navigate to profile screen
+                // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+              } else if (value == 'logout') {
+                _logout(context);
+              }
             },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'profile',
+                child: ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Profile'),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'logout',
+                child: ListTile(
+                  leading: Icon(Icons.exit_to_app),
+                  title: Text('Logout'),
+                ),
+              ),
+            ],
           ),
         ],
       ),
