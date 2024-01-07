@@ -12,6 +12,7 @@ Future<List<Recipe>> fetchRecipes() async {
     throw Exception('Failed to load recipes');
   }
 }
+
 // Add Data
 Future<String> addRecipe(Recipe recipe) async {
   var request = http.MultipartRequest(
@@ -37,23 +38,19 @@ Future<String> addRecipe(Recipe recipe) async {
 
 // Edit Data
 Future<String> editRecipe(Recipe recipe) async {
-  var request = http.MultipartRequest(
-    'PUT',
+  final response = await http.put(
     Uri.parse('http://192.168.43.198/api_php/recipes_api.php'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'id': recipe.id,
+      'name': recipe.name,
+      'htm': recipe.htm,
+      'tutorial': recipe.tutorial,
+      'image': recipe.imageFileName,
+    }),
   );
-
-  request.fields['id'] = recipe.id;
-  request.fields['name'] = recipe.name;
-  request.fields['htm'] = recipe.htm;
-  request.fields['tutorial'] = recipe.tutorial;
-
-  if (recipe.imageFileName != null) {
-    request.files.add(
-      await http.MultipartFile.fromPath('file', recipe.imageFileName!),
-    );
-  }
-
-  var response = await request.send();
 
   if (response.statusCode == 200) {
     return 'Recipe updated successfully';
@@ -61,6 +58,7 @@ Future<String> editRecipe(Recipe recipe) async {
     throw Exception('Failed to update recipe');
   }
 }
+
 
 
 // Delete Data
