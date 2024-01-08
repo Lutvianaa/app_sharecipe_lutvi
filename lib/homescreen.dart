@@ -174,13 +174,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _navigateToEditRecipeScreen(BuildContext context, Recipe recipe) {
-    Navigator.push(
+  Future<void> _navigateToEditRecipeScreen(BuildContext context, Recipe recipe) async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => EditRecipeScreen(recipe: recipe),
       ),
     );
+
+    if (result != null && result) {
+      setState(() {
+        _recipes = fetchRecipes();
+      });
+    }
   }
 
   void _deleteRecipe(BuildContext context, Recipe recipe) {

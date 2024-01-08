@@ -1,5 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
+
 
 // Read Data
 Future<List<Recipe>> fetchRecipes() async {
@@ -19,11 +21,11 @@ Future<String> addRecipe(Recipe recipe) async {
     'POST',
     Uri.parse('http://192.168.43.198/api_php/recipes_api.php'),
   )
-  ..files.add(await http.MultipartFile.fromPath('file', recipe.imageFileName!))
-  ..fields['name'] = recipe.name
-  ..fields['htm'] = recipe.htm
-  ..fields['tutorial'] = recipe.tutorial
-  ..headers['Content-Type'] = 'application/json';
+    ..files.add(await http.MultipartFile.fromPath('file', recipe.imageFileName!))
+    ..fields['name'] = recipe.name
+    ..fields['htm'] = recipe.htm
+    ..fields['tutorial'] = recipe.tutorial
+    ..headers['Content-Type'] = 'application/json';
 
   var response = await request.send();
 
@@ -35,8 +37,8 @@ Future<String> addRecipe(Recipe recipe) async {
 }
 
 
-
 // Edit Data
+
 Future<String> editRecipe(Recipe recipe) async {
   final response = await http.put(
     Uri.parse('http://192.168.43.198/api_php/recipes_api.php'),
@@ -59,6 +61,26 @@ Future<String> editRecipe(Recipe recipe) async {
   }
 }
 
+Future<String> editRecipeWithImage(Recipe recipe, File file) async {
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse('http://192.168.43.198/api_php/update_recipe.php'),
+  )
+    ..files.add(await http.MultipartFile.fromPath('file', file.path))
+    ..fields['id'] = recipe.id // Tambahkan field ID untuk memberi tahu server resep mana yang akan diubah
+    ..fields['name'] = recipe.name
+    ..fields['htm'] = recipe.htm
+    ..fields['tutorial'] = recipe.tutorial
+    ..headers['Content-Type'] = 'application/json';
+
+  var response = await request.send();
+
+  if (response.statusCode == 200) {
+    return 'Recipe updated successfully';
+  } else {
+    throw Exception('Failed to update recipe');
+  }
+}
 
 
 // Delete Data
@@ -83,7 +105,7 @@ class Recipe {
   final String name;
   final String htm;
   final String tutorial;
-  final String imageFileName; // Tambahkan field untuk nama file gambar
+  String imageFileName; // Declare imageFileName as a field
 
   Recipe({
     this.id = "1",
@@ -99,7 +121,8 @@ class Recipe {
       name: json['name'],
       htm: json['htm'],
       tutorial: json['tutorial'],
-      imageFileName: json['image'], // Assign nama file gambar dari response API
+      imageFileName: json['image'], // Assign the image file name from the API response
     );
   }
 }
+

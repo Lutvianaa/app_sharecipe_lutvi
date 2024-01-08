@@ -18,7 +18,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   final TextEditingController _htmController = TextEditingController();
   final TextEditingController _tutorialController = TextEditingController();
   File? _file;
-  String? _previewImagePath; // Untuk menampilkan preview gambar yang akan diunggah
+  String? _previewImagePath;
 
   @override
   void initState() {
@@ -35,10 +35,29 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     if (result != null) {
       setState(() {
         _file = File(result.files.single.path!);
-        _previewImagePath = null; // Reset preview image path
+        _previewImagePath = null;
       });
     }
   }
+
+  Future<String> _performEdit(BuildContext context, Recipe recipe) async {
+    try {
+      if (_file != null) {
+        // Periksa jika ada file baru, lakukan edit dengan gambar baru
+        String result = await editRecipeWithImage(recipe, _file!);
+        return result;
+      } else {
+        // Jika tidak ada file baru, lakukan edit tanpa mengubah gambar
+        String result = await editRecipe(recipe);
+        return result;
+      }
+    } catch (e) {
+      print('Failed to update recipe. Error: $e');
+      throw Exception('Failed to update recipe');
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +131,6 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Logika untuk menyimpan perubahan pada resep
           final String name = _nameController.text;
           final String htm = _htmController.text;
           final String tutorial = _tutorialController.text;
@@ -127,7 +145,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
             );
 
             try {
-              String result = await editRecipe(updatedRecipe);
+              String result = await _performEdit(context, updatedRecipe);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(result)),
               );
