@@ -40,19 +40,17 @@ Future<String> addRecipe(Recipe recipe) async {
 // Edit Data
 
 Future<String> editRecipe(Recipe recipe) async {
-  final response = await http.put(
-    Uri.parse('http://192.168.43.198/api_php/recipes_api.php'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'id': recipe.id,
-      'name': recipe.name,
-      'htm': recipe.htm,
-      'tutorial': recipe.tutorial,
-      'image': recipe.imageFileName,
-    }),
-  );
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse('http://192.168.43.198/api_php/update_recipe.php'),
+  )
+    ..fields['id'] = recipe.id // Tambahkan field ID untuk memberi tahu server resep mana yang akan diubah
+    ..fields['name'] = recipe.name
+    ..fields['htm'] = recipe.htm
+    ..fields['tutorial'] = recipe.tutorial
+    ..headers['Content-Type'] = 'application/json';
+
+  var response = await request.send();
 
   if (response.statusCode == 200) {
     return 'Recipe updated successfully';

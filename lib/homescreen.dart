@@ -5,6 +5,7 @@ import 'AddRecipeScreen.dart';
 import 'EditRecipeScreen.dart';
 import 'data/data_recipes.dart';
 import 'detail_recipe_screen.dart';
+import 'ProfileScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -51,14 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFFDF0EC),
       appBar: AppBar(
         title: Text('Recipes'),
+        backgroundColor: Colors.brown,
         actions: <Widget>[
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'profile') {
                 // Navigate to profile screen
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
               } else if (value == 'logout') {
                 _logout(context);
               }
@@ -102,53 +105,61 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   final recipe = snapshot.data![index];
-                  return ListTile(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    title: Text(
-                      recipe.name,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                      recipe.htm,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    leading: Container(
-                      width: 120,
-                      height: 120,
-                      margin: EdgeInsets.only(right: 16),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12), // Rounded border
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage('http://192.168.43.198/api_php/uploads/${recipe.imageFileName}'),
+                  return Column(
+                    children: <Widget>[
+                      ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        title: Text(
+                          recipe.name,
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          recipe.htm,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        leading: Container(
+                          width: 120,
+                          height: 120,
+                          margin: EdgeInsets.only(right: 16),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12), // Rounded border
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage('http://192.168.43.198/api_php/uploads/${recipe.imageFileName}'),
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailRecipeScreen(recipe: recipe),
+                            ),
+                          );
+                        },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                _navigateToEditRecipeScreen(context, recipe);
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.delete),
+                              onPressed: () {
+                                _deleteRecipe(context, recipe);
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailRecipeScreen(recipe: recipe),
-                        ),
-                      );
-                    },
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            _navigateToEditRecipeScreen(context, recipe);
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () {
-                            _deleteRecipe(context, recipe);
-                          },
-                        ),
-                      ],
-                    ),
+                      Divider( // Menambahkan Divider di antara setiap ListTile
+                        color: Colors.grey, // Atur warna garis pemisah sesuai kebutuhan
+                        thickness: 1.0, // Atur ketebalan garis pemisah
+                      ),
+                    ],
                   );
                 },
               );
@@ -161,6 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
           _navigateToAddRecipeScreen(context);
         },
         child: Icon(Icons.add),
+        backgroundColor: Colors.brown,
       ),
     );
   }

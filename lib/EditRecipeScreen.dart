@@ -63,6 +63,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.brown,
         title: Text('Edit Recipe'),
       ),
       body: Padding(
@@ -165,6 +166,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
           }
         },
         child: Icon(Icons.save),
+        backgroundColor: Colors.brown,
       ),
     );
   }

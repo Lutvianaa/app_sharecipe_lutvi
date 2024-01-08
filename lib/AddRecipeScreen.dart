@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'data/data_recipes.dart';
-import 'homescreen.dart';
 import 'dart:io';
 
 class AddRecipeScreen extends StatefulWidget {
@@ -29,6 +28,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.brown,
         title: Text('Add Recipe'),
       ),
       body: Padding(
@@ -59,13 +59,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 height: 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey),
+                  border: Border.all(color: Colors.white),
                 ),
                 child: _file == null
                     ? Center(
                   child: Text(
                     'Upload File',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 )
                     : Center(
@@ -110,6 +110,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           }
         },
         child: Icon(Icons.save),
+        backgroundColor: Colors.brown,
       ),
     );
   }

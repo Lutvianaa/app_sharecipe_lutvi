@@ -2,7 +2,6 @@ import 'package:crud_php/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'splash_screen.dart';
 import 'homescreen.dart';
-// import 'register_screen.dart';
 import 'package:provider/provider.dart';
 import 'api_manager.dart';
 import 'user_manager.dart';
@@ -32,6 +31,7 @@ class MyApp extends StatelessWidget {
           '/home': (context) => HomeScreen(),
           '/login': (context) => LoginScreen(),
         },
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
