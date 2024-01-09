@@ -59,13 +59,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 height: 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: Colors.brown),
                 ),
                 child: _file == null
                     ? Center(
                   child: Text(
                     'Upload File',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: TextStyle(fontSize: 16, color: Colors.brown),
                   ),
                 )
                     : Center(

@@ -34,12 +34,20 @@ class LoginScreen extends StatelessWidget {
     }
 
     try {
-      final token = await apiManager.authenticate(username, password);
-      if (token != null) {
+      final response = await apiManager.authenticate(username, password);
+      final token = response?['token'];
+      final userRole = response?['role'];
+
+      if (token != null && userRole != null) {
         userManager.setAuthToken(token);
-        Navigator.pushReplacementNamed(context, '/home');
+
+        if (userRole == 'User') {
+          Navigator.pushReplacementNamed(context, '/home_user');
+        } else if (userRole == 'Admin') {
+          Navigator.pushReplacementNamed(context, '/home');
+        }
       } else {
-        // Tampilkan pesan kesalahan jika autentikasi gagal (misalnya, email atau password tidak sesuai)
+        // Tampilkan pesan kesalahan jika autentikasi gagal
         showDialog(
           context: context,
           builder: (context) => AlertDialog(

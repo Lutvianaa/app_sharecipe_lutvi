@@ -11,6 +11,7 @@ class DetailRecipeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(recipe.name),
+        backgroundColor: Colors.brown,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),

@@ -8,6 +8,8 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  // RegisterScreen - update the _register function
+  // RegisterScreen - update the _register function
   Future<void> _register(BuildContext context) async {
     final apiManager = Provider.of<ApiManager>(context, listen: false);
 
@@ -16,16 +18,41 @@ class RegisterScreen extends StatelessWidget {
     final password = passwordController.text;
 
     try {
-      await apiManager.register(name, email, password);
-      // Show a toast on successful registration
-
-      Navigator.pushReplacementNamed(context, '/');
-      // Handle successful registration
+      final response = await apiManager.register(name, email, password);
+      // Check the response status
+      if (response.containsKey('status') && response['status'] == 'success') {
+        // Registration successful, show a success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Registration successful'),
+            backgroundColor: Colors.green, // Customize the success message style
+          ),
+        );
+        // Redirect to the login screen after a short delay (you can adjust the duration)
+        await Future.delayed(Duration(seconds: 2));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
+      } else if (response.containsKey('status') && response['status'] == 'error') {
+        // Registration failed, show the specific error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response['message']),
+            backgroundColor: Colors.red, // Customize the error message style
+          ),
+        );
+      } else {
+        // Handle other unexpected responses or errors
+        throw Exception('Unexpected response during registration');
+      }
     } catch (e) {
       print('Registration failed. Error: $e');
       // Handle registration failure
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
